@@ -1,0 +1,45 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BloodPressure {
+  id        Int    @id @default(autoincrement())
+  diastolic Int
+  systolic  Int
+  Vital     Vital?
+}
+
+enum WaterMeasurement {
+  OUNCES
+  CUPS
+}
+
+model WaterIntake {
+  id          Int              @id @default(autoincrement())
+  measurement WaterMeasurement @default(CUPS)
+  intake      Int
+  Vital       Vital?
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String
+  firstName String
+  lastName  String
+  Vital     Vital[]
+}
+
+model Vital {
+  id              Int           @id @default(autoincrement())
+  notes           String
+  pulse           Int
+  bodyTemperature Int
+  userId          Int
+  user            User          @relation(fields: [userId], references: [id])
+  waterIntakeId   Int
+  waterIntake     WaterIntake   @relation(fields: [waterIntakeId], references: [id])
+  bloodPressureId Int
+  bloodPressure   BloodPressure @relation(fields: [bloodPressureId], references: [id])
+}
+{"mode":"full","isActive":false}

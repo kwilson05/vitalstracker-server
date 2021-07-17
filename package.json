@@ -1,0 +1,27 @@
+{
+  "name": "ls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwilson05/vitalstracker-server.git"
+  },
+  "author": "kasozi wilson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kwilson05/vitalstracker-server/issues"
+  },
+  "homepage": "https://github.com/kwilson05/vitalstracker-server#readme",
+  "devDependencies": {
+    "@prisma/client": "^2.27.0",
+    "@prisma/migrate": "^2.27.0",
+    "prisma": "^2.27.0"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  }
+}
