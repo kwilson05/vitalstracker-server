@@ -3,6 +3,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model BloodPressure {
   id        Int    @id @default(autoincrement())
   diastolic Int
@@ -42,4 +46,3 @@ model Vital {
   bloodPressureId Int
   bloodPressure   BloodPressure @relation(fields: [bloodPressureId], references: [id])
 }
-{"mode":"full","isActive":false}
