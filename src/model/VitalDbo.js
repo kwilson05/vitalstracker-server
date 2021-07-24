@@ -6,27 +6,31 @@ const { getBloodPressure } = require('../factory/BloodPressureFactory');
 
 class VitalDbo {
   #id;
+  #notes;
   #pulse;
   #userId;
   #waterIntakeId;
   #bloodPressureId;
   #bodyTemperature;
-  #createDate;
+  #createdAt;
 
-  //include waterIntakeJson and bloodPressureJson
-  //then they'll only need to be set sometimes.
-  constructor({ id, pulse, userId, bloodPressureId, bodyTemperature, waterIntakeId, createDate }) {
+  constructor({ id, notes, pulse, userId, bloodPressureId, bodyTemperature, waterIntakeId, createdAt }) {
     this.#id = id;
+    this.#notes = notes;
     this.#pulse = pulse;
     this.#userId = userId;
     this.#bloodPressureId = bloodPressureId;
     this.#bodyTemperature = bodyTemperature;
     this.#waterIntakeId = waterIntakeId;
-    this.#createDate = createDate;
+    this.#createdAt = createdAt;
   }
 
   get id() {
     return this.#id;
+  }
+
+  get notes() {
+    return this.#notes;
   }
 
   get pulse() {
@@ -49,23 +53,22 @@ class VitalDbo {
     return this.#waterIntakeId;
   }
 
-  get createDate() {
-    return this.#createDate;
+  get createdAt() {
+    return this.#createdAt;
   }
 
   async json() {
-
-    //If waterIntake or bloodPressure isn't set then we need to hit the db to get them
     const bloodPressureDbo = await getBloodPressure(this.#bloodPressureId);
     const waterIntakeDbo = await getWaterIntake(this.#waterIntakeId);
 
     return {
       id: this.#id,
-      createDate: this.#createDate.toISOString().slice(0, -1),
+      notes: this.#notes,
+      createdAt: this.#createdAt.toISOString().slice(0, -1),
       pulse: this.#pulse,
       bodyTemperature: this.#bodyTemperature,
-      waterIntake: waterIntakeDbo.json,
-      bloodPressure: bloodPressureDbo.json
+      waterIntake: waterIntakeDbo.json(),
+      bloodPressure: bloodPressureDbo.json()
     }
   }
 
@@ -76,15 +79,15 @@ class VitalDbo {
         id: this.#id,
       },
       data: {
-        title: this.#title,
-        description: this.#description,
-        photoTakenDate: this.#photoTakenDate,
+        pulse: this.#pulse,
+        bodyTemperature: this.#bodyTemperature,
+        notes: this.#notes,
       }
     });
   }
   delete() {
     //not sure if prisma handles cascase deletes
-    return prisma.imagefile.delete({
+    return prisma.vital.delete({
       where: {
         id: this.#id,
       }

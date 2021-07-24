@@ -1,6 +1,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DB_URL")
 }
 
 generator client {
@@ -28,6 +29,7 @@ model WaterIntake {
 
 model User {
   id        Int     @id @default(autoincrement())
+  password  String
   email     String
   firstName String
   lastName  String
@@ -38,11 +40,12 @@ model Vital {
   id              Int           @id @default(autoincrement())
   notes           String
   pulse           Int
-  bodyTemperature Int
+  bodyTemperature String
   userId          Int
   user            User          @relation(fields: [userId], references: [id])
   waterIntakeId   Int
   waterIntake     WaterIntake   @relation(fields: [waterIntakeId], references: [id])
   bloodPressureId Int
   bloodPressure   BloodPressure @relation(fields: [bloodPressureId], references: [id])
+  createdAt       DateTime @default(now())
 }

@@ -1,92 +1,58 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const { getWaterIntake } = require('../factory/WaterIntakeFactory');
-const { getBloodPressure } = require('../factory/BloodPressureFactory');
 
-class VitalDbo {
+class BloodPressureDbo {
   #id;
-  #pulse;
-  #userId;
-  #waterIntakeId;
-  #bloodPressureId;
-  #bodyTemperature;
-  #createDate;
+  #systolic;
+  #diastolic;
 
-  constructor({ id, pulse, userId, bloodPressureId, bodyTemperature, waterIntakeId, createDate }) {
+  constructor({ id, systolic, diastolic }) {
     this.#id = id;
-    this.#pulse = pulse;
-    this.#userId = userId;
-    this.#bloodPressureId = bloodPressureId;
-    this.#bodyTemperature = bodyTemperature;
-    this.#waterIntakeId = waterIntakeId;
-    this.#createDate = createDate;
+    this.#systolic = systolic;
+    this.#diastolic = diastolic;
   }
 
   get id() {
     return this.#id;
   }
 
-  get pulse() {
-    return this.#pulse;
+  get systolic() {
+    return this.#systolic;
   }
 
-  get userId() {
-    return this.#userId;
+  get diastolic() {
+    return this.#diastolic;
   }
 
-  get bloodPressureId() {
-    return this.#bloodPressureId;
-  }
-
-  get bodyTemperature() {
-    return this.#bodyTemperature;
-  }
-
-  get waterIntakeId() {
-    return this.#waterIntakeId;
-  }
-
-  get createDate() {
-    return this.#createDate;
-  }
-
-  async json() {
-    const bloodPressureDbo = await getBloodPressure(this.#bloodPressureId);
-    const waterIntakeDbo = await getWaterIntake(this.#waterIntakeId);
-
+  json() {
     return {
       id: this.#id,
-      createDate: this.#createDate.toISOString().slice(0, -1),
-      pulse: this.#pulse,
-      bodyTemperature: this.#bodyTemperature,
-      waterIntake: waterIntakeDbo.json,
-      bloodPressure: bloodPressureDbo.json
+      systolic: this.#systolic,
+      diastolic: this.#diastolic
     }
   }
 
   save() {
-    //need to update waterintake and bloodPressureId then vital
-    return prisma.vital.update({
+    return prisma.bloodPressure.update({
       where: {
         id: this.#id,
       },
       data: {
-        title: this.#title,
-        description: this.#description,
-        photoTakenDate: this.#photoTakenDate,
+        systolic: this.#systolic,
+        diastolic: this.#diastolic,
       }
     });
   }
   delete() {
-    //not sure if prisma handles cascase deletes
-    return prisma.imagefile.delete({
+    return prisma.bloodPressure.delete({
       where: {
         id: this.#id,
+
       }
     })
   }
 }
 
 
-module.exports = VitalDbo;
+module.exports = BloodPressureDbo;

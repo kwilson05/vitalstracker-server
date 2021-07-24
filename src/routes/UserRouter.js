@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const Controller = require('../controller/VitalController');
+const Controller = require('../controller/UserController');
 
 router.use(function timeLog(req, res, next) {
-  console.log('Vital Route: ', Date.now());
+  console.log('User Route: ', Date.now());
   next();
 });
 
