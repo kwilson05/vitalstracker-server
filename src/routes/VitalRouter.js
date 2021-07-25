@@ -10,8 +10,8 @@ router.use(function timeLog(req, res, next) {
 
 router.post('/', Controller.new);
 /*router.delete('/:id', Controller.delete);
-router.post('/:id', Controller.edit);
-router.get('/', Controller.getAll);
-router.get('/:id', Controller.get);*/
+router.post('/:id', Controller.edit);*/
+router.get('/', Controller.all);
+router.get('/:vitalID', Controller.get);
 
 module.exports = router;

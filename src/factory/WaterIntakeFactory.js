@@ -27,6 +27,12 @@ module.exports.getWaterIntake = async (waterIntakeId) => {
   return newDbo(waterIntake);
 }
 
+module.exports.waterIntakeDbo = ({ id, measurement, intake }) => {
+  return newDbo({ id: id, measurement: measurement, intake: intake });
+}
+
 const newDbo = ({ id, measurement, intake }) => {
   return new WaterIntakeDbo({ id: id, measurement: measurement, intake: intake });
 }
+
+

@@ -1,27 +1,24 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const { getWaterIntake } = require('../factory/WaterIntakeFactory');
-const { getBloodPressure } = require('../factory/BloodPressureFactory');
-
 class VitalDbo {
   #id;
   #notes;
   #pulse;
   #userId;
-  #waterIntakeId;
-  #bloodPressureId;
+  #waterIntake;
+  #bloodPressure;
   #bodyTemperature;
   #createdAt;
 
-  constructor({ id, notes, pulse, userId, bloodPressureId, bodyTemperature, waterIntakeId, createdAt }) {
+  constructor({ id, notes, pulse, userId, bloodPressure, bodyTemperature, waterIntake, createdAt }) {
     this.#id = id;
     this.#notes = notes;
     this.#pulse = pulse;
     this.#userId = userId;
-    this.#bloodPressureId = bloodPressureId;
+    this.#bloodPressure = bloodPressure;
     this.#bodyTemperature = bodyTemperature;
-    this.#waterIntakeId = waterIntakeId;
+    this.#waterIntake = waterIntake;
     this.#createdAt = createdAt;
   }
 
@@ -41,25 +38,24 @@ class VitalDbo {
     return this.#userId;
   }
 
-  get bloodPressureId() {
-    return this.#bloodPressureId;
+  get bloodPressure() {
+    return this.#bloodPressure;
   }
 
   get bodyTemperature() {
     return this.#bodyTemperature;
   }
 
-  get waterIntakeId() {
-    return this.#waterIntakeId;
+  get waterIntake() {
+    return this.#waterIntake;
   }
 
   get createdAt() {
     return this.#createdAt;
   }
 
-  async json() {
-    const bloodPressureDbo = await getBloodPressure(this.#bloodPressureId);
-    const waterIntakeDbo = await getWaterIntake(this.#waterIntakeId);
+  json() {
+
 
     return {
       id: this.#id,
@@ -67,8 +63,8 @@ class VitalDbo {
       createdAt: this.#createdAt.toISOString().slice(0, -1),
       pulse: this.#pulse,
       bodyTemperature: this.#bodyTemperature,
-      waterIntake: waterIntakeDbo.json(),
-      bloodPressure: bloodPressureDbo.json()
+      waterIntake: this.#waterIntake.json(),
+      bloodPressure: this.#bloodPressure.json()
     }
   }
 
