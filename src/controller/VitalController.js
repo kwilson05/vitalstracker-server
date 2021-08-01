@@ -4,6 +4,9 @@ const {
   getAllVitals
 } = require('../factory/VitalFactory');
 
+const { createWaterIntakeDbo } = require("../factory/WaterIntakeFactory");
+const { createBloodPressureDbo } = require("../factory/BloodPressureFactory");
+
 module.exports.new = async (req, res) => {
   try {
     const vital = req.body;
@@ -55,8 +58,8 @@ module.exports.edit = async (req, res) => {
     const newVital = req.body;
     vitalDbo.notes = newVital.notes;
     vitalDbo.pulse = newVital.pulse;
-    vitalDbo.bloodPressure = newVital.bloodPressure;
-    vitalDbo.waterIntake = newVital.waterIntake;
+    vitalDbo.bloodPressureDbo = createBloodPressureDbo(newVital.bloodPressure);
+    vitalDbo.waterIntakeDbo = createWaterIntakeDbo(newVital.waterIntake);
     vitalDbo.bodyTemperature = newVital.bodyTemperature;
 
     await vitalDbo.save();
@@ -66,7 +69,38 @@ module.exports.edit = async (req, res) => {
   }
   catch (err) {
     console.log(err);
-    res.status(500).send({ error: 'Could not edit vitalDbo' })
+    res.status(500).send({ error: `Could not edit vital` });
+  }
+}
+
+module.exports.delete = async (req, res) => {
+  try {
+    const vitalID = req.params.vitalID;
+
+    if (!vitalID) {
+      res.status(400).send({
+        errror:
+          "Can't edit vitalDbo because vitalDbo id is missing"
+      });
+    }
+
+    const vitalDbo = await getVitalByID(parseInt(vitalID));
+    if (!vitalDbo) {
+      res.status(400).send({
+        errror:
+          `A vitalDbo doesn't exist for vitalDbo id ${vitalID}`
+      });
+      return;
+    }
+
+
+    await vitalDbo.delete();
+
+    res.status(200).send({});
+
+  }
+  catch (err) {
+    res.status(500).send({ error: `Could not delete ${vitalID} vital` });
   }
 }
 

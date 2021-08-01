@@ -16,7 +16,7 @@ module.exports.newWaterIntake = async ({ measurement, intake }) => {
   return newDbo(waterIntake);
 };
 
-module.exports.getWaterIntake = async (waterIntakeId) => {
+module.exports.findWaterIntake = async (waterIntakeId) => {
 
   const waterIntake = await prisma.waterIntake.findUnique({
     where: {
@@ -27,8 +27,8 @@ module.exports.getWaterIntake = async (waterIntakeId) => {
   return newDbo(waterIntake);
 }
 
-module.exports.waterIntakeDbo = ({ id, measurement, intake }) => {
-  return newDbo({ id: id, measurement: measurement, intake: intake });
+module.exports.createWaterIntakeDbo = ({ id, measurement, intake }) => {
+  return newDbo({ id: id, measurement: getWaterMeasurementString(measurement), intake: intake });
 }
 
 const newDbo = ({ id, measurement, intake }) => {

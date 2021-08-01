@@ -7,19 +7,19 @@ class VitalDbo {
   #notes;
   #pulse;
   #userId;
-  #waterIntake;
-  #bloodPressure;
+  #waterIntakeDbo;
+  #bloodPressureDbo;
   #bodyTemperature;
   #createdAt;
 
-  constructor({ id, notes, pulse, userId, bloodPressure, bodyTemperature, waterIntake, createdAt }) {
+  constructor({ id, notes, pulse, userId, bloodPressureDbo, bodyTemperature, waterIntakeDbo, createdAt }) {
     this.#id = id;
     this.#notes = notes;
     this.#pulse = pulse;
     this.#userId = userId;
-    this.#bloodPressure = bloodPressure;
+    this.#bloodPressureDbo = bloodPressureDbo;
     this.#bodyTemperature = bodyTemperature;
-    this.#waterIntake = waterIntake;
+    this.#waterIntakeDbo = waterIntakeDbo;
     this.#createdAt = createdAt;
   }
 
@@ -56,13 +56,13 @@ class VitalDbo {
     this.#userId = userId;
   }
 
-  get bloodPressure() {
-    return this.#bloodPressure;
+  get bloodPressureDbo() {
+    return this.#bloodPressureDbo;
   }
 
-  set bloodPressure({ systolic, diastolic }) {
-    this.#bloodPressure.systolic = systolic;
-    this.#bloodPressure.diastolic = diastolic;
+  set bloodPressureDbo({ systolic, diastolic }) {
+    this.#bloodPressureDbo.systolic = systolic;
+    this.#bloodPressureDbo.diastolic = diastolic;
   }
 
   get bodyTemperature() {
@@ -73,13 +73,13 @@ class VitalDbo {
     this.#bodyTemperature = bodyTemperature;
   }
 
-  get waterIntake() {
-    return this.#waterIntake;
+  get waterIntakeDbo() {
+    return this.#waterIntakeDbo;
   }
 
-  set waterIntake({ measurement, intake }) {
-    this.#waterIntake.measurement = measurement;
-    this.#waterIntake.intake = intake;
+  set waterIntakeDbo({ measurement, intake }) {
+    this.#waterIntakeDbo.measurement = measurement;
+    this.#waterIntakeDbo.intake = intake;
   }
 
   get createdAt() {
@@ -93,16 +93,12 @@ class VitalDbo {
       createdAt: this.#createdAt.toISOString().slice(0, -1),
       pulse: this.#pulse,
       bodyTemperature: this.#bodyTemperature,
-      waterIntake: this.#waterIntake.json(),
-      bloodPressure: this.#bloodPressure.json()
+      waterIntake: this.#waterIntakeDbo.json(),
+      bloodPressure: this.#bloodPressureDbo.json()
     }
   }
 
   async save() {
-
-    this.#waterIntake.save();
-    this.#bloodPressure.save();
-
     return prisma.vital.update({
       where: {
         id: this.#id,
@@ -111,16 +107,17 @@ class VitalDbo {
         pulse: this.#pulse,
         bodyTemperature: this.#bodyTemperature,
         notes: this.#notes,
+
         waterIntake: {
           update: {
-            measurement: getWaterMeasurement(this.#waterIntake.measurement),
-            intake: this.#waterIntake.intake
+            measurement: getWaterMeasurement(this.#waterIntakeDbo.measurement),
+            intake: this.#waterIntakeDbo.intake
           }
         },
         bloodPressure: {
           update: {
-            systolic: this.#bloodPressure.systolic,
-            diastolic: this.#bloodPressure.diastolic
+            systolic: this.#bloodPressureDbo.systolic,
+            diastolic: this.#bloodPressureDbo.diastolic
           }
         }
       },
@@ -131,11 +128,11 @@ class VitalDbo {
     });
   }
   delete() {
-    //not sure if prisma handles cascase deletes
+
     return prisma.vital.delete({
       where: {
         id: this.#id,
-      }
+      },
     })
   }
 }

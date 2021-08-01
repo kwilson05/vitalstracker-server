@@ -14,7 +14,7 @@ module.exports.newBloodPressure = async function ({ diastolic, systolic }) {
   return newDbo(bloodPressure);
 };
 
-module.exports.getBloodPressure = async (bloodPressureId) => {
+module.exports.findBloodPressure = async (bloodPressureId) => {
 
   const bloodPressure = await prisma.bloodPressure.findUnique({
     where: {
@@ -25,7 +25,7 @@ module.exports.getBloodPressure = async (bloodPressureId) => {
   return newDbo(bloodPressure);
 }
 
-module.exports.bloodPressureDbo = ({ id, systolic, diastolic }) => {
+module.exports.createBloodPressureDbo = ({ id, systolic, diastolic }) => {
   return newDbo({ id: id, systolic: systolic, diastolic: diastolic });
 }
 

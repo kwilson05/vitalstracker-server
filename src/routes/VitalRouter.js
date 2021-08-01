@@ -9,7 +9,7 @@ router.use(function timeLog(req, res, next) {
 });
 
 router.post('/', Controller.new);
-/*router.delete('/:id', Controller.delete);*/
+router.delete('/:vitalID', Controller.delete);
 router.put('/:vitalID', Controller.edit);
 router.get('/', Controller.all);
 router.get('/:vitalID', Controller.get);

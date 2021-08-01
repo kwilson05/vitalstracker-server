@@ -12,7 +12,8 @@ model BloodPressure {
   id        Int    @id @default(autoincrement())
   diastolic Int
   systolic  Int
-  Vital     Vital?
+  vitalID   Int
+  vital     Vital  @relation(fields: [vitalID], references: [id])
 }
 
 enum WaterMeasurement {
@@ -24,7 +25,8 @@ model WaterIntake {
   id          Int              @id @default(autoincrement())
   measurement WaterMeasurement @default(CUPS)
   intake      Int
-  Vital       Vital?
+  vitalID     Int
+  vital       Vital  @relation(fields: [vitalID], references: [id])
 }
 
 model User {
@@ -43,9 +45,7 @@ model Vital {
   bodyTemperature String
   userId          Int
   user            User          @relation(fields: [userId], references: [id])
-  waterIntakeId   Int
-  waterIntake     WaterIntake   @relation(fields: [waterIntakeId], references: [id])
-  bloodPressureId Int
-  bloodPressure   BloodPressure @relation(fields: [bloodPressureId], references: [id])
+  waterIntake     WaterIntake?
+  bloodPressure   BloodPressure?
   createdAt       DateTime @default(now())
 }
