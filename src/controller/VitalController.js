@@ -100,7 +100,8 @@ module.exports.delete = async (req, res) => {
 
   }
   catch (err) {
-    res.status(500).send({ error: `Could not delete ${vitalID} vital` });
+    console.log(err);
+    res.status(500).send({ error: `Could not delete vital` });
   }
 }
 
