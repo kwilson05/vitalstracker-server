@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const WaterIntakeDbo = require('../model/WaterIntakeDbo');
-const { getWaterMeasurement } = require("../factory/WaterMeasurementFactory");
+const { getWaterMeasurement, getWaterMeasurementString } = require("../factory/WaterMeasurementFactory");
 
 module.exports.newWaterIntake = async ({ measurement, intake }) => {
 
@@ -32,7 +32,7 @@ module.exports.waterIntakeDbo = ({ id, measurement, intake }) => {
 }
 
 const newDbo = ({ id, measurement, intake }) => {
-  return new WaterIntakeDbo({ id: id, measurement: measurement, intake: intake });
+  return new WaterIntakeDbo({ id: id, measurement: getWaterMeasurementString(measurement), intake: intake });
 }
 
 

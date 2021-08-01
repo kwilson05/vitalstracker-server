@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { getWaterMeasurement } = require('../factory/WaterMeasurementFactory');
 const prisma = new PrismaClient();
 
 class VitalDbo {
@@ -26,28 +27,59 @@ class VitalDbo {
     return this.#id;
   }
 
+  set id(id) {
+    this.#id = id;
+  }
+
   get notes() {
     return this.#notes;
   }
 
+  set notes(notes) {
+    this.#notes = notes;
+  }
+
+
   get pulse() {
     return this.#pulse;
+  }
+
+  set pulse(pulse) {
+    this.#pulse = pulse;
   }
 
   get userId() {
     return this.#userId;
   }
 
+  set userId(userId) {
+    this.#userId = userId;
+  }
+
   get bloodPressure() {
     return this.#bloodPressure;
+  }
+
+  set bloodPressure({ systolic, diastolic }) {
+    this.#bloodPressure.systolic = systolic;
+    this.#bloodPressure.diastolic = diastolic;
   }
 
   get bodyTemperature() {
     return this.#bodyTemperature;
   }
 
+  set bodyTemperature(bodyTemperature) {
+    this.#bodyTemperature = bodyTemperature;
+  }
+
   get waterIntake() {
     return this.#waterIntake;
+  }
+
+  set waterIntake({ measurement, intake }) {
+    this.#waterIntake.measurement = measurement;
+    this.#waterIntake.intake = intake;
   }
 
   get createdAt() {
@@ -55,8 +87,6 @@ class VitalDbo {
   }
 
   json() {
-
-
     return {
       id: this.#id,
       notes: this.#notes,
@@ -68,8 +98,11 @@ class VitalDbo {
     }
   }
 
-  save() {
-    //need to update waterintake and bloodPressureId then vital
+  async save() {
+
+    this.#waterIntake.save();
+    this.#bloodPressure.save();
+
     return prisma.vital.update({
       where: {
         id: this.#id,
@@ -78,6 +111,22 @@ class VitalDbo {
         pulse: this.#pulse,
         bodyTemperature: this.#bodyTemperature,
         notes: this.#notes,
+        waterIntake: {
+          update: {
+            measurement: getWaterMeasurement(this.#waterIntake.measurement),
+            intake: this.#waterIntake.intake
+          }
+        },
+        bloodPressure: {
+          update: {
+            systolic: this.#bloodPressure.systolic,
+            diastolic: this.#bloodPressure.diastolic
+          }
+        }
+      },
+      include: {
+        bloodPressure: true,
+        waterIntake: true
       }
     });
   }

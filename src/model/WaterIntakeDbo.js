@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const { getWaterMeasurement } = require("../factory/WaterMeasurementFactory");
 
 class WaterIntakeDbo {
   #id;
@@ -21,8 +22,16 @@ class WaterIntakeDbo {
     return this.#measurement;
   }
 
+  set measurement(measurement) {
+    this.#measurement = measurement;
+  }
+
   get intake() {
     return this.#intake;
+  }
+
+  set intake(intake) {
+    this.#intake = intake;
   }
 
   json() {
@@ -40,7 +49,7 @@ class WaterIntakeDbo {
       },
       data: {
         intake: this.#intake,
-        measurement: this.#measurement,
+        measurement: getWaterMeasurement(this.#measurement),
       }
     });
   }

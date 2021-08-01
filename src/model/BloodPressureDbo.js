@@ -21,8 +21,16 @@ class BloodPressureDbo {
     return this.#systolic;
   }
 
+  set systolic(systolic) {
+    this.#systolic = systolic;
+  }
+
   get diastolic() {
     return this.#diastolic;
+  }
+
+  set diastolic(diastolic) {
+    this.#diastolic = diastolic;
   }
 
   json() {
