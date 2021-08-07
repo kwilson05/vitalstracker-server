@@ -26,6 +26,7 @@ module.exports.get = async (req, res) => {
 
     if (!vitalDbo) {
       res.status(404).send({ error: `Vital does not exist for vitalDbo id ${req.params.vitalID}` });
+      return;
     }
 
     res.status(200).send(vitalDbo.json());
@@ -68,7 +69,6 @@ module.exports.edit = async (req, res) => {
 
   }
   catch (err) {
-    console.log(err);
     res.status(500).send({ error: `Could not edit vital` });
   }
 }
