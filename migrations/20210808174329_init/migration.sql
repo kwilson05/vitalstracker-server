@@ -6,7 +6,7 @@ CREATE TABLE "BloodPressure" (
     "id" SERIAL NOT NULL,
     "diastolic" INTEGER NOT NULL,
     "systolic" INTEGER NOT NULL,
-    "vitalID" INTEGER NOT NULL,
+    "vitalID" INTEGER,
 
     PRIMARY KEY ("id")
 );
@@ -16,7 +16,7 @@ CREATE TABLE "WaterIntake" (
     "id" SERIAL NOT NULL,
     "measurement" "WaterMeasurement" NOT NULL DEFAULT E'CUPS',
     "intake" INTEGER NOT NULL,
-    "vitalID" INTEGER NOT NULL,
+    "vitalID" INTEGER,
 
     PRIMARY KEY ("id")
 );
@@ -51,10 +51,10 @@ CREATE UNIQUE INDEX "BloodPressure_vitalID_unique" ON "BloodPressure"("vitalID")
 CREATE UNIQUE INDEX "WaterIntake_vitalID_unique" ON "WaterIntake"("vitalID");
 
 -- AddForeignKey
-ALTER TABLE "BloodPressure" ADD FOREIGN KEY ("vitalID") REFERENCES "Vital"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BloodPressure" ADD FOREIGN KEY ("vitalID") REFERENCES "Vital"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "WaterIntake" ADD FOREIGN KEY ("vitalID") REFERENCES "Vital"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WaterIntake" ADD FOREIGN KEY ("vitalID") REFERENCES "Vital"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Vital" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

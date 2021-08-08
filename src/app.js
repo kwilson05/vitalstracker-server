@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const config = require('../config/config');
 const firebase = require("firebase/app");
 
+
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,

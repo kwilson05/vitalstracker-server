@@ -1,13 +1,19 @@
-const { newUser } = require("../factory/UserFactory");
+const { getAllUsers } = require("../factory/UserFactory");
 
-module.exports.new = async (req, res) => {
+module.exports.all = async (req, res) => {
   try {
-    const user = req.body;
-    const userDbo = await newUser(user);
-    res.status(200).send(userDbo.json());
+    const userDbos = await getAllUsers();
+
+    const usersJson = [];
+
+    for (let userDbo of userDbos) {
+      usersJson.push(userDbo.json());
+    }
+
+    res.status(200).send(usersJson);
   }
   catch (err) {
     console.log(err);
-    res.status(500).send({ error: 'Could not create new user' });
+    res.status(500).send({ error: 'Could not retrieve all users' });
   }
 }

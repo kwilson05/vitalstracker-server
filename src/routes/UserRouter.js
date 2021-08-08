@@ -8,7 +8,8 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
-router.post('/', Controller.new);
+//router.post('/', Controller.new);
+router.get('/', Controller.all);
 /*router.delete('/:id', Controller.delete);
 router.post('/:id', Controller.edit);
 router.get('/', Controller.getAll);
