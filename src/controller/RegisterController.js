@@ -1,6 +1,8 @@
-const admin = require("firebase-admin");
+const firebase = require("firebase")
 const { newUser, findUserByEmail } = require("../factory/UserFactory");
 const { hashPassword } = require("../util/PasswordUtil");
+const { nextTick } = require("vue");
+
 
 module.exports.register = async (req, res) => {
 
@@ -22,27 +24,24 @@ module.exports.register = async (req, res) => {
       lastName: lastName,
       email: email,
       password: hashedPassword
-    })
-
-    const firebaseUser = await admin
-      .auth()
-      .createUser({
-        uid: `${newUserDbo.id}`,
-        email: email,
-        emailVerified: false,
-        password: hashedPassword,
-        displayName: `${firstName} ${lastName}`,
-        disabled: false,
-      });* /
+    });
 
 
+    const firebaseUser = await firebase.auth().createUserWithEmailAndPassword(email, hashedPassword);
 
-    //need to create a cookie
-    //might create new route for that
-    res.status(200).send({});
+
+    const firebaseToken = await firebaseUser.user.getIdToken();
+
+    /*
+      redirect using http status code 307 for a temporary redirect
+      to keep the same request method (POST)
+     */
+    res.redirect(307, `/session/${firebaseToken}`);
   }
   catch (err) {
-    console.log(err);
+
     res.status(500).send({ error: "Could not register user" });
   }
 }
+
+

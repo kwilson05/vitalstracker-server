@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const Controller = require('../controller/RegisterController');
+const Controller = require('../controller/SignoutController');
 
 
 router.use(function timeLog(req, res, next) {
-  console.log('User Route: ', Date.now());
+  console.log('Signout Route: ', Date.now());
   next();
 });
 
-router.post('/', Controller.register);
+router.post('/', Controller.signout);
 
 module.exports = router;

@@ -4,8 +4,8 @@ const jsonBodyParser = require('body-parser').json();
 const cors = require('cors');
 const morgan = require('morgan');
 const config = require('../config/config');
-const firebase = require("firebase/app");
-
+const firebaseApp = require("firebase/app");
+const firebase = require("firebase");
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -16,15 +16,23 @@ const firebaseConfig = {
   appId: process.env.APP_ID
 };
 
-firebase.initializeApp(firebaseConfig);
+firebaseApp.initializeApp(firebaseConfig);
 
 
 const admin = require("firebase-admin");
 admin.initializeApp({
   credential: admin.credential.applicationDefault()
-})
+});
+
+// As httpOnly cookies are to be used, do not persist any state client side.
+firebase.auth().setPersistence(firebaseApp.auth.Auth.Persistence.NONE);
+
+
 
 const app = express();
+
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 app.use(morgan('combined')); // prints logs; user agent; verbose logs
 
 app.use(jsonBodyParser);
