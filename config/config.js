@@ -5,5 +5,5 @@ module.exports = {
       : 'production',
   port: process.env.PORT || 8081,
   pwd_cost_factor: 1,
-  clientDomain: process.env.clientUrl || 'http://localhost:3000',
+  clientDomain: process.env.clientUrl || 'http://localhost:8080',
 };

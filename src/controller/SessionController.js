@@ -12,7 +12,7 @@ module.exports.signin = async (req, res) => {
       .auth()
       .createSessionCookie(firebaseToken, { expiresIn });
     // Set cookie policy for session cookie.
-    const options = { maxAge: expiresIn, httpOnly: true, secure: true };
+    const options = { maxAge: expiresIn, httpOnly: true, secure: false };
     res.cookie('session', sessionCookie, options);
 
     res.status(200).send({});

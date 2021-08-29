@@ -1,7 +1,7 @@
 const firebase = require("firebase")
 const { newUser, findUserByEmail } = require("../factory/UserFactory");
 const { hashPassword } = require("../util/PasswordUtil");
-const { nextTick } = require("vue");
+
 
 
 module.exports.register = async (req, res) => {
@@ -36,7 +36,7 @@ module.exports.register = async (req, res) => {
       redirect using http status code 307 for a temporary redirect
       to keep the same request method (POST)
      */
-    res.redirect(307, `/session/${firebaseToken}`);
+    res.redirect(307, `session/${firebaseToken}`);
   }
   catch (err) {
 
