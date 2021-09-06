@@ -1,6 +1,6 @@
-const firebase = require("firebase")
 const { newUser, findUserByEmail } = require("../factory/UserFactory");
 const { hashPassword } = require("../util/PasswordUtil");
+const { newFirebaseUserToken } = require("../util/FirebaseUtil");
 
 
 
@@ -10,33 +10,31 @@ module.exports.register = async (req, res) => {
 
   try {
 
-    const userDbo = await findUserByEmail(email);
-    if (userDbo) {
+    if ((await findUserByEmail(email))) {
       res.status(400).send({ error: 'An user with this email address already exists' });
       return;
     }
-
-    const hashedPassword = await hashPassword(password);
 
     //create new user in db
     const newUserDbo = await newUser({
       firstName: firstName,
       lastName: lastName,
       email: email,
-      password: hashedPassword
+      password: await hashPassword(password)
     });
 
+    const firebaseUserToken = await newFirebaseUserToken({
+      email: newUserDbo.email,
+      password: newUserDbo.password,
+      userID: newUserDbo.id.toString()
+    });
 
-    const firebaseUser = await firebase.auth().createUserWithEmailAndPassword(email, hashedPassword);
-
-
-    const firebaseToken = await firebaseUser.user.getIdToken();
 
     /*
       redirect using http status code 307 for a temporary redirect
       to keep the same request method (POST)
      */
-    res.redirect(307, `session/${firebaseToken}`);
+    res.redirect(307, `session/${firebaseUserToken}`);
   }
   catch (err) {
 

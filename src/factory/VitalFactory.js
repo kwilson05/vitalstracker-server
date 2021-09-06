@@ -78,7 +78,7 @@ module.exports.getVitalByID = async (vitalID) => {
   });
 }
 
-module.exports.getAllVitals = async () => {
+module.exports.getAllVitals = async ({ userId }) => {
   const vitals = await prisma.vital.findMany({
     include: {
       waterIntake: true,

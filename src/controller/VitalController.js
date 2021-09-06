@@ -107,7 +107,8 @@ module.exports.delete = async (req, res) => {
 
 module.exports.all = async (req, res) => {
   try {
-    const vitalDbos = await getAllVitals();
+
+    const vitalDbos = await getAllVitals({ userId: req.user.id });
 
     const vitalsJson = [];
 

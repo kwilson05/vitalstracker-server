@@ -1,19 +1,18 @@
-const admin = require("firebase-admin");
-
+const { newFirebaseSessionCookie } = require("../util/FirebaseUtil");
+const { cookieOptions, cookieFiveDayMaxAge } = require("../util/SessionCookieUtil");
 module.exports.signin = async (req, res) => {
 
   try {
     const { firebaseToken } = req.params;
 
-    // Set session expiration to 5 days.
-    const expiresIn = 60 * 60 * 24 * 5 * 1000;
+    const sessionCookiePayload = await newFirebaseSessionCookie(firebaseToken);
 
-    const sessionCookie = await admin
-      .auth()
-      .createSessionCookie(firebaseToken, { expiresIn });
-    // Set cookie policy for session cookie.
-    const options = { maxAge: expiresIn, httpOnly: true, secure: false };
-    res.cookie('session', sessionCookie, options);
+
+    res.cookie('session', sessionCookiePayload, cookieOptions({
+      maxAge: cookieFiveDayMaxAge(),
+      isSecure: false,
+      isHttpOnly: true
+    }));
 
     res.status(200).send({});
   }
@@ -25,11 +24,11 @@ module.exports.signin = async (req, res) => {
 module.exports.signout = async (req, res) => {
 
 
-  const sessionCookie = req.cookies.session;
+  const sessionCookiePayload = req.cookies.session;
   res.clearCookie('session');
   const claims = await admin
     .auth()
-    .verifySessionCookie(sessionCookie);
+    .verifySessionCookie(sessionCookiePayload);
 
 
   admin.auth().revokeRefreshTokens(claims.sub);

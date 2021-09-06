@@ -7,7 +7,7 @@ const SigninRouter = require("./SigninRouter");
 const AxiosRouter = require("./AxiosRouter");
 
 module.exports = function (app) {
-  app.use('/vital', AxiosRouter, VitalRouter);
+  app.use('/vital', AxiosRouter, UserRouter, VitalRouter);
   app.use('/register', AxiosRouter, RegisterRouter);
   app.use('/user', AxiosRouter, UserRouter);
   app.use('/session', SessionRouter);
