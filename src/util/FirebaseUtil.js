@@ -2,17 +2,18 @@ const firebase = require("firebase").default;
 const firebase_admin = require("firebase-admin");
 const { cookieFiveDayMaxAge, cookieOptions } = require("../util/SessionCookieUtil");
 
+
 module.exports.decodeClaims = async (cookie) => {
 
   if (!cookie) {
     return {}
   }
 
-  const decodedClaims = await FIREBASE_USER_ADMIN
+  const decodedClaims = await firebase_admin
     .auth()
-    .verifySessionCookie(sessionCookie, true);
+    .verifySessionCookie(cookie, true);
 
-  return decodedClaims;
+  return { email: decodedClaims.email, userID: decodedClaims.uid };
 }
 
 module.exports.newFirebaseUserToken = async ({ email, password, userID }) => {

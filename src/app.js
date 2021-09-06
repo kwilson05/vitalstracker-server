@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const jsonBodyParser = require('body-parser').json();
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const config = require('../config/config');
@@ -31,7 +32,7 @@ firebase.auth().setPersistence(firebaseApp.auth.Auth.Persistence.NONE);
 
 const app = express();
 
-const cookieParser = require('cookie-parser');
+
 app.use(cookieParser());
 app.use(morgan('combined')); // prints logs; user agent; verbose logs
 
