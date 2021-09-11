@@ -10,7 +10,7 @@ const { createBloodPressureDbo } = require("../factory/BloodPressureFactory");
 module.exports.new = async (req, res) => {
   try {
     const vital = req.body;
-    const vitalDbo = await newVital(vital);
+    const vitalDbo = await newVital({ vital: vital, userID: parseInt(res.locals.user.userID) });
 
     res.status(200).send(vitalDbo.json());
   }
@@ -22,7 +22,7 @@ module.exports.new = async (req, res) => {
 
 module.exports.get = async (req, res) => {
   try {
-    const vitalDbo = await getVitalByID(parseInt(req.params.vitalID));
+    const vitalDbo = await getVitalByID({ vitalID: parseInt(req.params.vitalID), userID: parseInt(res.locals.user.userID) });
 
     if (!vitalDbo) {
       res.status(404).send({ error: `Vital does not exist for vitalDbo id ${req.params.vitalID}` });
@@ -32,7 +32,7 @@ module.exports.get = async (req, res) => {
     res.status(200).send(vitalDbo.json());
   }
   catch (err) {
-    console.log(err);
+
     res.status(500).send({ error: 'Error occured when looking for vitalDbo by id' });
   }
 }
@@ -48,7 +48,7 @@ module.exports.edit = async (req, res) => {
       });
     }
 
-    const vitalDbo = await getVitalByID(parseInt(vitalID));
+    const vitalDbo = await getVitalByID({ vitalID: parseInt(vitalID), userID: parseInt(res.locals.user.userID) });
     if (!vitalDbo) {
       res.status(400).send({
         errror:
@@ -84,7 +84,7 @@ module.exports.delete = async (req, res) => {
       });
     }
 
-    const vitalDbo = await getVitalByID(parseInt(vitalID));
+    const vitalDbo = await getVitalByID({ vitalID: parseInt(vitalID), userID: parseInt(res.locals.user.userID) });
     if (!vitalDbo) {
       res.status(400).send({
         errror:
@@ -108,7 +108,7 @@ module.exports.delete = async (req, res) => {
 module.exports.all = async (req, res) => {
   try {
 
-    const vitalDbos = await getAllVitals({ userId: res.locals.userID });
+    const vitalDbos = await getAllVitals({ userID: parseInt(res.locals.user.userID) });
 
     const vitalsJson = [];
 

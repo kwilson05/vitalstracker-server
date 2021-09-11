@@ -5,14 +5,16 @@ const { createWaterIntakeDbo } = require('./WaterIntakeFactory');
 const { createBloodPressureDbo } = require('./BloodPressureFactory');
 const { getWaterMeasurement } = require("../factory/WaterMeasurementFactory");
 
-module.exports.newVital = async function ({ notes, pulse, bloodPressure, waterIntake, bodyTemperature }) {
+module.exports.newVital = async function ({ vital, userID }) {
 
-  const vital = await prisma.vital.create({
+  const { notes, pulse, bloodPressure, waterIntake, bodyTemperature } = vital;
+
+  const newVital = await prisma.vital.create({
     data: {
       notes: notes,
       pulse: pulse,
       bodyTemperature: bodyTemperature,
-      userId: 1,
+      userId: userID,
       waterIntake: {
         create: {
           measurement: getWaterMeasurement(waterIntake.measurement),
@@ -33,33 +35,33 @@ module.exports.newVital = async function ({ notes, pulse, bloodPressure, waterIn
   });
 
 
-  const bloodPressureDbo = createBloodPressureDbo(vital.bloodPressure);
+  const bloodPressureDbo = createBloodPressureDbo(newVital.bloodPressure);
 
-  const waterIntakeDbo = createWaterIntakeDbo(vital.waterIntake);
+  const waterIntakeDbo = createWaterIntakeDbo(newVital.waterIntake);
 
 
   return newDbo({
-    id: vital.id,
-    notes: vital.notes,
-    pulse: vital.pulse,
-    bodyTemperature: vital.bodyTemperature,
-    userId: vital.userId,
+    id: newVital.id,
+    notes: newVital.notes,
+    pulse: newVital.pulse,
+    bodyTemperature: newVital.bodyTemperature,
+    userId: newVital.userId,
     waterIntakeDbo: waterIntakeDbo,
     bloodPressureDbo: bloodPressureDbo,
-    createdAt: vital.createdAt
+    createdAt: newVital.createdAt
   });
 };
 
-module.exports.getVitalByID = async (vitalID) => {
-  const vital = await prisma.vital.findUnique({
+module.exports.getVitalByID = async ({ vitalID, userID }) => {
+  const vital = await prisma.vital.findFirst({
     where: {
-      id: vitalID
+      id: vitalID,
+      userId: userID
     },
     include: {
       waterIntake: true,
       bloodPressure: true
     },
-
   });
 
   if (!vital) {
@@ -78,8 +80,11 @@ module.exports.getVitalByID = async (vitalID) => {
   });
 }
 
-module.exports.getAllVitals = async ({ userId }) => {
+module.exports.getAllVitals = async ({ userID }) => {
   const vitals = await prisma.vital.findMany({
+    where: {
+      userId: userID
+    },
     include: {
       waterIntake: true,
       bloodPressure: true

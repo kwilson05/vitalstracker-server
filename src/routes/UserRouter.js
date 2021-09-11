@@ -15,7 +15,7 @@ router.use(async (req, res, next) => {
       res.locals.user = userClaims;
       next();
     }
-    else if (res.locals.user && !req.cookie) {
+    else if (!res.locals.user || !req.cookie) {
       res.status(403).send({ error: "User isn't logged in" });
       return;
     }
