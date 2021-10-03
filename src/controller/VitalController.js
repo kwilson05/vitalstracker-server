@@ -110,13 +110,9 @@ module.exports.all = async (req, res) => {
 
     const vitalDbos = await getAllVitals({ userID: parseInt(res.locals.user.userID) });
 
-    const vitalsJson = [];
+    const vitalsArr = vitalDbos.map(vitalDbo => vitalDbo.json());
 
-    for (let vitalDbo of vitalDbos) {
-      vitalsJson.push(vitalDbo.json());
-    }
-
-    res.status(200).send(vitalsJson);
+    res.status(200).send({ vitals: vitalsArr });
   }
   catch (err) {
     res.status(500).send({ error: 'Error occured when looking for all vitals' });
