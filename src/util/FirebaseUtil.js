@@ -16,6 +16,14 @@ module.exports.decodeClaims = async (cookie) => {
   return { email: decodedClaims.email, userID: decodedClaims.uid };
 }
 
+module.exports.firebaseSignin = async ({ email, password }) => {
+  const firebaseUserCredentail = await firebase.auth().signInWithEmailAndPassword(
+    email,
+    password
+  );
+
+  return await firebaseUserCredentail.user.getIdToken();
+}
 module.exports.newFirebaseUserToken = async ({ email, password, userID }) => {
 
   const firebaseUser = await firebase_admin.auth().createUser(

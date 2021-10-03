@@ -1,5 +1,6 @@
 const { newFirebaseSessionCookie } = require("../util/FirebaseUtil");
 const { cookieOptions, cookieFiveDayMaxAge } = require("../util/SessionCookieUtil");
+
 module.exports.signin = async (req, res) => {
 
   try {
